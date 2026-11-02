@@ -1,10 +1,12 @@
 import Feather from '@expo/vector-icons/Feather';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { ScrollView, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, TextInput, View } from 'react-native';
+import { Avatar } from '../../components/PostCard';
 import { ProductCard } from '../../components/ProductCard';
 import { Card, Chip, IconButton, Row, Screen, Txt } from '../../components/ui';
 import { KIND_LABEL, type Kind } from '../../data/types';
+import { SELLERS, SELLER_TYPE_LABEL, SHOP_INFO } from '../../data/demo';
 import { compatCount } from '../../engine/stylist';
 import { useStore } from '../../store/AppStore';
 import { C, F } from '../../theme';
@@ -13,7 +15,9 @@ const CATS: (Kind | 'all')[] = ['all', 'top', 'bottom', 'dress', 'outer', 'shoes
 type Sort = 'match' | 'cheap' | 'fast';
 
 export default function Market() {
-  const { products, wardrobe, cart, orders, favorites } = useStore();
+  const { products, wardrobe, cart, orders, favorites, subscriptions } = useStore();
+  // Shops the user follows go first.
+  const shops = [...SELLERS].sort((a, b) => Number(subscriptions.includes(b.id)) - Number(subscriptions.includes(a.id)));
   const [cat, setCat] = useState<Kind | 'all'>('all');
   const [sort, setSort] = useState<Sort>('match');
   const [onlyFav, setOnlyFav] = useState(false);
@@ -42,6 +46,26 @@ export default function Market() {
           <IconButton icon="shopping-cart" label="Корзина" badge={cart.length} onPress={() => router.push('/cart')} />
         </Row>
       </Row>
+
+      <View style={{ gap: 10 }}>
+        <Txt v="h2">Магазины</Txt>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }} style={{ marginHorizontal: -20, paddingHorizontal: 20, flexGrow: 0 }}>
+          {shops.map((s) => (
+            <Pressable
+              key={s.id}
+              accessibilityRole="link"
+              accessibilityLabel={s.name}
+              onPress={() => router.push({ pathname: '/shop/[id]', params: { id: s.id } })}
+              style={{ width: 132, padding: 12, gap: 8, borderRadius: 18, borderWidth: 1, borderColor: subscriptions.includes(s.id) ? C.accent : C.line }}
+            >
+              <Avatar name={s.name} color={SHOP_INFO[s.id].color} size={44} />
+              <Txt v="small" color={C.ink} style={{ fontFamily: F.b, fontSize: 13 }} lines={2}>{s.name}</Txt>
+              <Txt v="small" style={{ fontSize: 11 }}>{SELLER_TYPE_LABEL[s.type]} · ★ {s.rating.toString().replace('.', ',')}</Txt>
+            </Pressable>
+          ))}
+          <View style={{ width: 20 }} />
+        </ScrollView>
+      </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, height: 46, paddingHorizontal: 14, borderRadius: 23, backgroundColor: C.surface }}>
         <Feather name="search" size={18} color={C.muted} />

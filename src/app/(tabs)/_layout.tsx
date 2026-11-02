@@ -22,7 +22,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen name="index" options={{ title: 'Сегодня', tabBarIcon: icon('sun') }} />
-      <Tabs.Screen name="wardrobe" options={{ title: 'Гардероб', tabBarIcon: icon('grid') }} />
+      <Tabs.Screen name="feed" options={{ title: 'Лента', tabBarIcon: icon('layers') }} />
       <Tabs.Screen name="stylist" options={{ title: 'Стилист', tabBarIcon: icon('message-circle') }} />
       <Tabs.Screen name="market" options={{ title: 'Маркет', tabBarIcon: icon('shopping-bag') }} />
       <Tabs.Screen name="profile" options={{ title: 'Профиль', tabBarIcon: icon('user') }} />

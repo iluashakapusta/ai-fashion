@@ -2,13 +2,13 @@ import Feather from '@expo/vector-icons/Feather';
 import { Link, router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
-import { GarmentTile } from '../../components/GarmentIcon';
-import { Btn, Card, IconButton, Row, Screen, Txt, Chip } from '../../components/ui';
-import { WEATHER } from '../../data/demo';
-import { KIND_LABEL, type Kind } from '../../data/types';
-import { countOutfits, gaps } from '../../engine/stylist';
-import { useStore } from '../../store/AppStore';
-import { C, F, plural, rub } from '../../theme';
+import { GarmentTile } from '../components/GarmentIcon';
+import { BackBar, Btn, Card, IconButton, Row, Screen, Txt, Chip } from '../components/ui';
+import { WEATHER } from '../data/demo';
+import { KIND_LABEL, type Kind } from '../data/types';
+import { countOutfits, gaps } from '../engine/stylist';
+import { useStore } from '../store/AppStore';
+import { C, F, plural, rub } from '../theme';
 
 const CATS: (Kind | 'all')[] = ['all', 'top', 'bottom', 'dress', 'outer', 'shoes', 'acc'];
 
@@ -32,7 +32,7 @@ export default function Wardrobe() {
   const unused = wardrobe.filter((w) => w.wears <= 1);
 
   return (
-    <Screen>
+    <Screen header={<BackBar label="Профиль" fallback="/profile" />}>
       <Row style={{ justifyContent: 'space-between' }}>
         <View style={{ gap: 4 }}>
           <Txt v="display">Гардероб</Txt>

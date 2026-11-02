@@ -1,8 +1,9 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { DEMO_WARDROBE, PRODUCTS, WEATHER } from '../data/demo';
+import type { Post } from '../data/feed';
 import type { CartLine, ChatMessage, Look, Order, Product, WardrobeItem } from '../data/types';
 import { alternatives, parseRequest, planLooks } from '../engine/stylist';
-import { plural } from '../theme';
+import { C, plural } from '../theme';
 
 export const FREE_REQUESTS_PER_DAY = 3;
 
@@ -41,6 +42,14 @@ interface Store {
   requestsToday: number;
   settings: Settings;
   todayVariant: number;
+  likes: string[];
+  subscriptions: string[];
+  reported: string[];
+  myPosts: Post[];
+  toggleLike: (postId: string) => void;
+  toggleSubscribe: (id: string) => void;
+  report: (postId: string) => void;
+  addPost: (post: Omit<Post, 'id' | 'author' | 'authorColor' | 'likes' | 'comments' | 'hoursAgo'>) => void;
   addItem: (item: Omit<WardrobeItem, 'id' | 'wears'>) => void;
   removeItem: (id: string) => void;
   ask: (text: string) => void;
@@ -70,6 +79,10 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
   const [requestsToday, setRequests] = useState(0);
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [todayVariant, setTodayVariant] = useState(0);
+  const [likes, setLikes] = useState<string[]>([]);
+  const [subscriptions, setSubscriptions] = useState<string[]>(['c1', 's1']);
+  const [reported, setReported] = useState<string[]>([]);
+  const [myPosts, setMyPosts] = useState<Post[]>([]);
 
   // Orders move forward on their own so the demo shows live tracking.
   useEffect(() => {
@@ -154,6 +167,11 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<Store>(() => ({
     wardrobe, products, looks, messages, cart, orders, favorites, premium, requestsToday, settings, todayVariant,
+    likes, subscriptions, reported, myPosts,
+    toggleLike: (id) => setLikes((xs) => (xs.includes(id) ? xs.filter((x) => x !== id) : [...xs, id])),
+    toggleSubscribe: (id) => setSubscriptions((xs) => (xs.includes(id) ? xs.filter((x) => x !== id) : [...xs, id])),
+    report: (id) => setReported((r) => (r.includes(id) ? r : [...r, id])),
+    addPost: (post) => setMyPosts((ps) => [{ ...post, id: uid('post'), author: 'Вы', authorColor: C.accent, likes: 0, comments: 0, hoursAgo: 0 }, ...ps]),
     addItem: (item) => setWardrobe((w) => [{ ...item, id: uid('w'), wears: 0 }, ...w]),
     removeItem: (id) => setWardrobe((w) => w.filter((x) => x.id !== id)),
     ask,
@@ -169,8 +187,10 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     reset: () => {
       setWardrobe(DEMO_WARDROBE); setProducts(PRODUCTS); setLooks({}); setMessages([GREETING]); setCart([]);
       setOrders([]); setFavorites([]); setPremium(false); setRequests(0); setSettings(DEFAULT_SETTINGS); setTodayVariant(0);
+      setLikes([]); setSubscriptions(['c1', 's1']); setReported([]); setMyPosts([]);
     },
   }), [wardrobe, products, looks, messages, cart, orders, favorites, premium, requestsToday, settings, todayVariant,
+    likes, subscriptions, reported, myPosts,
     ask, replaceInLook, addToCart, addLooksToCart, checkout]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

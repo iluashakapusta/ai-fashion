@@ -16,8 +16,10 @@ const PERKS = [
 ];
 
 const PLANS = [
-  { id: 'year', name: 'Год', sub: '489 ₽ в месяц', price: '5 870 ₽', after: 'Потом 5 870 ₽ в год', badge: true },
-  { id: 'month', name: 'Месяц', sub: 'помесячно', price: '699 ₽', after: 'Потом 699 ₽ в месяц', badge: false },
+  { id: 'year', name: '12 месяцев', sub: '489 ₽ в месяц', price: '5 870 ₽', after: 'Потом 5 870 ₽ в год', badge: '−30%' },
+  { id: 'half', name: '6 месяцев', sub: '549 ₽ в месяц', price: '3 290 ₽', after: 'Потом 3 290 ₽ за 6 месяцев', badge: '−22%' },
+  { id: 'quarter', name: '3 месяца', sub: '597 ₽ в месяц', price: '1 790 ₽', after: 'Потом 1 790 ₽ за 3 месяца', badge: '−15%' },
+  { id: 'month', name: '1 месяц', sub: 'помесячно', price: '699 ₽', after: 'Потом 699 ₽ в месяц', badge: '' },
 ];
 
 export default function Premium() {
@@ -39,20 +41,6 @@ export default function Premium() {
           <Txt color="#CFCFCB">За октябрь Premium вернул бы тебе 780 ₽ кэшбэком, сэкономил 597 ₽ на доставке и уберёг от 2 покупок, которые дублируют гардероб.</Txt>
         </View>
 
-        <View style={{ gap: 14 }}>
-          {PERKS.map((p) => (
-            <Row key={p.title} gap={12} style={{ alignItems: 'flex-start' }}>
-              <View style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: C.accent, alignItems: 'center', justifyContent: 'center' }}>
-                <Feather name="check" size={14} color="#FFFFFF" />
-              </View>
-              <View style={{ flex: 1, gap: 1 }}>
-                <Txt v="title" color="#FFFFFF">{p.title}</Txt>
-                <Txt v="small" color={C.darkMuted} style={{ fontSize: 13 }}>{p.text}</Txt>
-              </View>
-            </Row>
-          ))}
-        </View>
-
         {!premium && (
           <View style={{ gap: 8 }}>
             {PLANS.map((p) => {
@@ -70,9 +58,9 @@ export default function Premium() {
                     <Txt v="title" color="#FFFFFF">{p.name}</Txt>
                     <Txt v="small" color={C.darkMuted}>{p.sub}</Txt>
                   </View>
-                  {p.badge && (
+                  {!!p.badge && (
                     <View style={{ height: 22, paddingHorizontal: 8, borderRadius: 11, backgroundColor: '#9FE3B8', justifyContent: 'center' }}>
-                      <Txt v="small" color="#0E3B21" style={{ fontSize: 11 }}>−30%</Txt>
+                      <Txt v="small" color="#0E3B21" style={{ fontSize: 11 }}>{p.badge}</Txt>
                     </View>
                   )}
                   <Txt v="title" color="#FFFFFF">{p.price}</Txt>
@@ -81,6 +69,21 @@ export default function Premium() {
             })}
           </View>
         )}
+
+        <View style={{ gap: 14 }}>
+          {PERKS.map((p) => (
+            <Row key={p.title} gap={12} style={{ alignItems: 'flex-start' }}>
+              <View style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: C.accent, alignItems: 'center', justifyContent: 'center' }}>
+                <Feather name="check" size={14} color="#FFFFFF" />
+              </View>
+              <View style={{ flex: 1, gap: 1 }}>
+                <Txt v="title" color="#FFFFFF">{p.title}</Txt>
+                <Txt v="small" color={C.darkMuted} style={{ fontSize: 13 }}>{p.text}</Txt>
+              </View>
+            </Row>
+          ))}
+        </View>
+
       </ScrollView>
 
       <View style={{ paddingHorizontal: 22, paddingBottom: 12, paddingTop: 8, gap: 8 }}>

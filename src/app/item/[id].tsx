@@ -50,7 +50,6 @@ export default function ItemScreen() {
         </View>
       )}
       <Btn label="Подобрать образ с этой вещью" kind="accent" onPress={() => router.push({ pathname: '/stylist', params: { q: `Собери образ на каждый день с вещью «${item.name}»` } })} />
-      {item.wears <= 1 && <Btn label="Продать в маркете" kind="outline" icon="tag" onPress={() => router.push('/seller')} />}
       <Btn label="Удалить из гардероба" kind="ghost" onPress={() => { removeItem(item.id); goBack('/wardrobe'); }} />
     </Screen>
   );
