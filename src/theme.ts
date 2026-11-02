@@ -1,4 +1,4 @@
-// Visual themes. All five share one concept — quiet "old money" luxury:
+// Visual themes. All four share one concept — quiet "old money" luxury:
 // warm paper grounds, a single deep accent, serif display type over a calm
 // sans or book serif, square-ish corners. They differ in palette and type pairing.
 import { CormorantGaramond_600SemiBold } from '@expo-google-fonts/cormorant-garamond/600SemiBold';
@@ -141,23 +141,6 @@ export const THEMES: Theme[] = [
     fonts: { d: 'CormorantGaramond_700Bold', dm: 'CormorantGaramond_700Bold', ...LORA.fonts },
     displaySize: 32, bigSize: 52,
     assets: { CormorantGaramond_700Bold, ...LORA.assets },
-  },
-  {
-    id: 'club',
-    name: 'Клуб',
-    description: 'Тёмная тема: зелёное сукно, кремовый текст и золото. Для вечера.',
-    pairing: 'Playfair Display + Jost',
-    dark: true,
-    colors: {
-      ink: '#F1EADB', muted: '#B2AD9E', ground: '#14201A', surface: '#1C2B23', card: '#1F3027', line: '#34473B',
-      accent: '#C9A96E', accentSoft: '#2A3A2F', accentInk: '#E2C994', onAccent: '#14201A',
-      dark: '#F1EADB', onDark: '#14201A', onDarkMuted: '#5A574D', onDarkAccent: '#7A5B22',
-      adBg: '#3A3020', adInk: '#E6C88E', ok: '#8FC79F', okSoft: '#23382B', danger: '#E58A7F',
-      badgeBg: '#C9A96E', badgeInk: '#14201A', frame: '#0D1612',
-    },
-    fonts: { d: 'PlayfairDisplay_600SemiBold', dm: 'PlayfairDisplay_500Medium', ...JOST.fonts },
-    displaySize: 27, bigSize: 44,
-    assets: { PlayfairDisplay_600SemiBold, PlayfairDisplay_500Medium, ...JOST.assets },
   },
 ];
 

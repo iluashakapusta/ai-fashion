@@ -74,15 +74,13 @@ export default function Today() {
             if (!g) return null;
             return (
               <Link key={it.id} href={{ pathname: '/item/[id]', params: { id: g.id } }} asChild>
-                <Pressable accessibilityRole="link" accessibilityLabel={g.name} style={{ flex: 1, gap: 6 }}>
+                <Pressable accessibilityRole="link" accessibilityLabel={g.name} style={{ flex: 1 }}>
                   <GarmentTile item={g} radius={14} />
-                  <Txt v="small" color={C.ink} lines={1}>{g.name}</Txt>
                 </Pressable>
               </Link>
             );
           })}
         </Row>
-        <Txt v="small">Офис · всё из твоего гардероба · учтены погода и дождь</Txt>
       </View>
 
       {settings.calendar ? (

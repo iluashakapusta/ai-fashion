@@ -22,7 +22,7 @@ export default function ThemeScreen() {
 
   return (
     <Screen header={<BackBar label="Профиль" title="Оформление" fallback="/profile" />}>
-      <Txt>Одна классическая эстетика — пять настроений. Выбор сохранится на этом устройстве.</Txt>
+      <Txt>Одна классическая эстетика — четыре настроения. Выбор сохранится на этом устройстве.</Txt>
       {!ready ? (
         <ActivityIndicator color={C.accent} style={{ marginTop: 40 }} />
       ) : (
