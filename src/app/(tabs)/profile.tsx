@@ -6,13 +6,11 @@ import { GarmentTile } from '../../components/GarmentIcon';
 import { Btn, Card, Chip, Divider, IconButton, Row, Screen, ToggleRow, Txt, type IconName } from '../../components/ui';
 import { countOutfits } from '../../engine/stylist';
 import { useStore } from '../../store/AppStore';
-import { useTheme } from '../../store/ThemeStore';
-import { C, plural, themeById } from '../../theme';
+import { C, plural } from '../../theme';
 
 export default function Profile() {
   const { premium, setPremium, settings, updateSettings, orders, cart, reset, wardrobe } = useStore();
   const outfits = countOutfits(wardrobe);
-  const { themeId } = useTheme();
 
   const confirmReset = () => {
     if (Platform.OS === 'web') {
@@ -63,8 +61,6 @@ export default function Profile() {
         <NavRow icon="package" label="Мои заказы" hint={orders.length ? `${orders.length} в работе` : 'Пока нет заказов'} onPress={() => router.push('/orders')} />
         <Divider />
         <NavRow icon="shopping-cart" label="Корзина" hint={cart.length ? `${cart.length} ${plural(cart.length, ['товар', 'товара', 'товаров'])}` : undefined} onPress={() => router.push('/cart')} />
-        <Divider />
-        <NavRow icon="droplet" label="Оформление" hint={`${themeById(themeId).name} · цвета и шрифты`} onPress={() => router.push('/theme')} />
       </View>
 
       <Collapsible icon="link" title="Источники данных" hint="Календарь, геолокация и погода">

@@ -7,8 +7,7 @@ import { useEffect } from 'react';
 import { Platform, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppStoreProvider } from '../store/AppStore';
-import { ThemeProvider, savedThemeId } from '../store/ThemeStore';
-import { C, T, applyTheme, themeById } from '../theme';
+import { C, FONT_ASSETS } from '../theme';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -16,12 +15,8 @@ export const unstable_settings = { initialRouteName: '(tabs)' };
 
 SplashScreen.preventAutoHideAsync();
 
-// Apply the saved theme before the first render so nothing flashes in the default palette.
-const INITIAL_THEME = savedThemeId();
-applyTheme(INITIAL_THEME);
-
 export default function RootLayout() {
-  const [loaded, error] = useFonts({ ...themeById(INITIAL_THEME).assets, ...Feather.font });
+  const [loaded, error] = useFonts({ ...FONT_ASSETS, ...Feather.font });
 
   useEffect(() => {
     if (error) throw error;
@@ -36,25 +31,23 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <AppStoreProvider>
-        <ThemeProvider initial={INITIAL_THEME}>
-          {(themeId) => {
-            // Colours and fonts are read at render time, so a theme switch remounts the navigator.
-            const app = (
-              <View key={themeId} style={{ flex: 1 }}>
-                <StatusBar style={T.dark ? 'light' : 'dark'} />
-                <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: C.ground } }}>
-                  <Stack.Screen name="(tabs)" />
-                  <Stack.Screen name="premium" options={{ presentation: 'modal' }} />
-                  <Stack.Screen name="item/new" options={{ presentation: 'modal' }} />
-                  <Stack.Screen name="post/new" options={{ presentation: 'modal' }} />
-                </Stack>
-              </View>
-            );
-            return Platform.OS === 'web' ? <WebFrame>{app}</WebFrame> : app;
-          }}
-        </ThemeProvider>
+        {Platform.OS === 'web' ? <WebFrame><AppStack /></WebFrame> : <AppStack />}
       </AppStoreProvider>
     </SafeAreaProvider>
+  );
+}
+
+function AppStack() {
+  return (
+    <>
+      <StatusBar style="dark" />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: C.ground } }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="premium" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="item/new" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="post/new" options={{ presentation: 'modal' }} />
+      </Stack>
+    </>
   );
 }
 
