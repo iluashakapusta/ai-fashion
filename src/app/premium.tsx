@@ -16,8 +16,8 @@ const PERKS = [
 ];
 
 const PLANS = [
-  { id: 'year', name: 'Год', sub: '208 ₽ в месяц', price: '2 490 ₽', after: 'Потом 2 490 ₽ в год', badge: true },
-  { id: 'month', name: 'Месяц', sub: 'помесячно', price: '299 ₽', after: 'Потом 299 ₽ в месяц', badge: false },
+  { id: 'year', name: 'Год', sub: '489 ₽ в месяц', price: '5 870 ₽', after: 'Потом 5 870 ₽ в год', badge: true },
+  { id: 'month', name: 'Месяц', sub: 'помесячно', price: '699 ₽', after: 'Потом 699 ₽ в месяц', badge: false },
 ];
 
 export default function Premium() {
@@ -36,7 +36,7 @@ export default function Premium() {
         <View style={{ gap: 8 }}>
           <Txt v="label" color="#9AA4FF">Premium</Txt>
           <Txt v="display" color="#FFFFFF">Личный стилист, который окупается</Txt>
-          <Txt color="#CFCFCB">За октябрь Premium вернул бы тебе 640 ₽ кэшбэком и уберёг от 2 покупок, которые дублируют гардероб.</Txt>
+          <Txt color="#CFCFCB">За октябрь Premium вернул бы тебе 780 ₽ кэшбэком, сэкономил 597 ₽ на доставке и уберёг от 2 покупок, которые дублируют гардероб.</Txt>
         </View>
 
         <View style={{ gap: 14 }}>
@@ -90,7 +90,7 @@ export default function Premium() {
           <>
             <Btn label="Попробовать 7 дней бесплатно" kind="light" onPress={() => { setPremium(true); goBack('/profile'); }} />
             <Txt v="small" color={C.darkMuted} center>{cur.after}. Отмена в любой момент. Демо: оплата не списывается.</Txt>
-            <Btn label="Только на одну поездку? Пакет «Отпуск» — 249 ₽" kind="ghost" small onPress={() => { setPremium(true); goBack('/profile'); }} />
+            <Btn label="Только на одну поездку? Пакет «Отпуск» — 399 ₽" kind="ghost" small onPress={() => { setPremium(true); goBack('/profile'); }} />
           </>
         )}
       </View>
