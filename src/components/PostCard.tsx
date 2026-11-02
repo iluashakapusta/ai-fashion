@@ -25,14 +25,14 @@ export function PostCard({ post }: { post: Post }) {
 
   if (reported.includes(post.id)) {
     return (
-      <View style={{ borderRadius: 22, backgroundColor: C.surface, padding: 16 }}>
+      <View style={{ borderRadius: 10, backgroundColor: C.surface, padding: 16 }}>
         <Txt v="small">Публикация скрыта. Спасибо — модераторы её проверят.</Txt>
       </View>
     );
   }
 
   return (
-    <View style={{ borderRadius: 22, borderWidth: 1, borderColor: C.line, padding: 14, gap: 12, backgroundColor: C.ground }}>
+    <View style={{ borderRadius: 10, borderWidth: 1, borderColor: C.line, padding: 14, gap: 12, backgroundColor: C.card }}>
       <Row gap={10}>
         <Avatar name={post.author} color={post.authorColor} />
         <View style={{ flex: 1 }}>
@@ -53,10 +53,10 @@ export function PostCard({ post }: { post: Post }) {
 
       {menu && (
         <Row gap={8}>
-          <Pressable accessibilityRole="button" onPress={() => report(post.id)} style={{ height: 36, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, borderColor: C.line, justifyContent: 'center' }}>
+          <Pressable accessibilityRole="button" onPress={() => report(post.id)} style={{ height: 36, paddingHorizontal: 14, borderRadius: 3, borderWidth: 1, borderColor: C.line, justifyContent: 'center' }}>
             <Txt v="small" color={C.danger}>Пожаловаться</Txt>
           </Pressable>
-          <Pressable accessibilityRole="button" onPress={() => report(post.id)} style={{ height: 36, paddingHorizontal: 14, borderRadius: 18, borderWidth: 1, borderColor: C.line, justifyContent: 'center' }}>
+          <Pressable accessibilityRole="button" onPress={() => report(post.id)} style={{ height: 36, paddingHorizontal: 14, borderRadius: 3, borderWidth: 1, borderColor: C.line, justifyContent: 'center' }}>
             <Txt v="small" color={C.ink}>Скрыть автора</Txt>
           </Pressable>
         </Row>
@@ -82,7 +82,7 @@ export function PostCard({ post }: { post: Post }) {
           <Txt v="bodyB">{post.comments}</Txt>
         </View>
         <View style={{ flex: 1 }} />
-        <Pressable accessibilityRole="button" onPress={() => router.push({ pathname: '/stylist', params: { q: post.prompt } })} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 44, paddingHorizontal: 12, borderRadius: 22, backgroundColor: C.accentSoft }}>
+        <Pressable accessibilityRole="button" onPress={() => router.push({ pathname: '/stylist', params: { q: post.prompt } })} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 44, paddingHorizontal: 12, borderRadius: 10, backgroundColor: C.accentSoft }}>
           <Feather name="zap" size={15} color={C.accent} />
           <Txt v="small" color={C.accent} style={{ fontFamily: F.b }}>Собрать похожий</Txt>
         </Pressable>

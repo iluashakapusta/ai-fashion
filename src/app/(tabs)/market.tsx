@@ -56,7 +56,7 @@ export default function Market() {
               accessibilityRole="link"
               accessibilityLabel={s.name}
               onPress={() => router.push({ pathname: '/shop/[id]', params: { id: s.id } })}
-              style={{ width: 132, padding: 12, gap: 8, borderRadius: 18, borderWidth: 1, borderColor: subscriptions.includes(s.id) ? C.accent : C.line }}
+              style={{ width: 132, padding: 12, gap: 8, borderRadius: 8, borderWidth: 1, borderColor: subscriptions.includes(s.id) ? C.accent : C.line }}
             >
               <Avatar name={s.name} color={SHOP_INFO[s.id].color} size={44} />
               <Txt v="small" color={C.ink} style={{ fontFamily: F.b, fontSize: 13 }} lines={2}>{s.name}</Txt>
@@ -67,7 +67,7 @@ export default function Market() {
         </ScrollView>
       </View>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, height: 46, paddingHorizontal: 14, borderRadius: 23, backgroundColor: C.surface }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, height: 46, paddingHorizontal: 14, borderRadius: 3, backgroundColor: C.surface }}>
         <Feather name="search" size={18} color={C.muted} />
         <TextInput
           accessibilityLabel="Поиск товаров"
@@ -94,7 +94,7 @@ export default function Market() {
       {promoted.length > 0 && (
         <Card tone="ad" style={{ gap: 12 }}>
           <Row style={{ justifyContent: 'space-between' }}>
-            <Txt v="title" color="#5C3200">Предложения брендов</Txt>
+            <Txt v="title" color={C.adInk}>Предложения брендов</Txt>
             <Txt v="small" color={C.adInk}>Реклама</Txt>
           </Row>
           <Row gap={12} style={{ alignItems: 'flex-start' }}>

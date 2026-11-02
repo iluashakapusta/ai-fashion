@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, View, type ViewStyle } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import type { Garment, Kind } from '../data/types';
-import { C, isDark } from '../theme';
+import { C, GARMENT_INK_DARK, isDark } from '../theme';
 
 export type IconKind = Kind | 'watch' | 'bag' | 'scarf' | 'hat';
 
@@ -76,12 +76,12 @@ export function GarmentTile({
   item, size, radius = 16, ring, style,
 }: { item: Garment & { photoUri?: string }; size?: number; radius?: number; ring?: boolean; style?: ViewStyle }) {
   const box: ViewStyle = size ? { width: size, height: size } : { width: '100%', aspectRatio: 1 };
-  const ink = isDark(item.color) ? '#FFFFFF' : C.ink;
+  const ink = isDark(item.color) ? '#FFFFFF' : GARMENT_INK_DARK;
   const light = item.color.toUpperCase() === '#FFFFFF' || item.color.toUpperCase() === '#F5F5F3';
   return (
     <View
       style={[box, {
-        borderRadius: radius, backgroundColor: item.color, alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+        borderRadius: Math.max(3, Math.round(radius * 0.4)), backgroundColor: item.color, alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
         borderWidth: ring ? 2 : light ? 1 : 0, borderColor: ring ? C.accent : C.line,
       }, style]}
     >

@@ -35,7 +35,7 @@ export function LookCard({ look }: { look: Look }) {
     : 'Всё есть в гардеробе';
   return (
     <Link href={{ pathname: '/look/[id]', params: { id: look.id } }} asChild>
-      <Pressable accessibilityRole="link" style={{ backgroundColor: C.ground, borderRadius: 20, padding: 14, gap: 10 }}>
+      <Pressable accessibilityRole="link" style={{ backgroundColor: C.card, borderRadius: 10, padding: 14, gap: 10 }}>
         <Row style={{ justifyContent: 'space-between', alignItems: 'baseline' }}>
           <Txt v="title" style={{ flex: 1 }} lines={1}>{look.title}</Txt>
           <Txt v="bodyB">{t.total ? rub(t.total) : '0 ₽'}</Txt>

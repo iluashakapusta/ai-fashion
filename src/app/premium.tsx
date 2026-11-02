@@ -31,14 +31,14 @@ export default function Premium() {
     <SafeAreaView edges={['top', 'bottom']} style={{ flex: 1, backgroundColor: C.dark }}>
       <Row style={{ justifyContent: 'flex-end', paddingHorizontal: 12, paddingTop: 8 }}>
         <Pressable accessibilityRole="button" accessibilityLabel="Закрыть" onPress={() => goBack('/profile')} style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
-          <Feather name="x" size={22} color="#FFFFFF" />
+          <Feather name="x" size={22} color={C.onDark} />
         </Pressable>
       </Row>
       <ScrollView contentContainerStyle={{ paddingHorizontal: 22, gap: 20, paddingBottom: 20 }}>
         <View style={{ gap: 8 }}>
-          <Txt v="label" color="#9AA4FF">Premium</Txt>
-          <Txt v="display" color="#FFFFFF">Личный стилист, который окупается</Txt>
-          <Txt color="#CFCFCB">За октябрь Premium вернул бы тебе 780 ₽ кэшбэком, сэкономил 597 ₽ на доставке и уберёг от 2 покупок, которые дублируют гардероб.</Txt>
+          <Txt v="label" color={C.onDarkAccent}>Premium</Txt>
+          <Txt v="display" color={C.onDark}>Личный стилист, который окупается</Txt>
+          <Txt color={C.onDarkMuted}>За октябрь Premium вернул бы тебе 780 ₽ кэшбэком, сэкономил 597 ₽ на доставке и уберёг от 2 покупок, которые дублируют гардероб.</Txt>
         </View>
 
         {!premium && (
@@ -51,19 +51,19 @@ export default function Premium() {
                   accessibilityRole="radio"
                   accessibilityState={{ selected: on }}
                   onPress={() => setPlan(p.id)}
-                  style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 62, paddingHorizontal: 16, borderRadius: 18, borderWidth: 2, borderColor: on ? '#FFFFFF' : '#3A3A38', backgroundColor: on ? '#1F1F1E' : C.dark }}
+                  style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 62, paddingHorizontal: 16, borderRadius: 8, borderWidth: 2, borderColor: on ? C.onDark : C.onDarkMuted, backgroundColor: 'transparent' }}
                 >
-                  <View style={{ width: 20, height: 20, borderRadius: 10, borderWidth: 2, borderColor: on ? '#FFFFFF' : '#3A3A38', backgroundColor: on ? '#FFFFFF' : 'transparent' }} />
+                  <View style={{ width: 20, height: 20, borderRadius: 10, borderWidth: 2, borderColor: on ? C.onDark : C.onDarkMuted, backgroundColor: on ? C.onDark : 'transparent' }} />
                   <View style={{ flex: 1 }}>
-                    <Txt v="title" color="#FFFFFF">{p.name}</Txt>
-                    <Txt v="small" color={C.darkMuted}>{p.sub}</Txt>
+                    <Txt v="title" color={C.onDark}>{p.name}</Txt>
+                    <Txt v="small" color={C.onDarkMuted}>{p.sub}</Txt>
                   </View>
                   {!!p.badge && (
-                    <View style={{ height: 22, paddingHorizontal: 8, borderRadius: 11, backgroundColor: '#9FE3B8', justifyContent: 'center' }}>
-                      <Txt v="small" color="#0E3B21" style={{ fontSize: 11 }}>{p.badge}</Txt>
+                    <View style={{ height: 22, paddingHorizontal: 8, borderRadius: 3, backgroundColor: C.badgeBg, justifyContent: 'center' }}>
+                      <Txt v="small" color={C.badgeInk} style={{ fontSize: 11 }}>{p.badge}</Txt>
                     </View>
                   )}
-                  <Txt v="title" color="#FFFFFF">{p.price}</Txt>
+                  <Txt v="title" color={C.onDark}>{p.price}</Txt>
                 </Pressable>
               );
             })}
@@ -73,12 +73,12 @@ export default function Premium() {
         <View style={{ gap: 14 }}>
           {PERKS.map((p) => (
             <Row key={p.title} gap={12} style={{ alignItems: 'flex-start' }}>
-              <View style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: C.accent, alignItems: 'center', justifyContent: 'center' }}>
-                <Feather name="check" size={14} color="#FFFFFF" />
+              <View style={{ width: 28, height: 28, borderRadius: 14, borderWidth: 1, borderColor: C.onDarkAccent, alignItems: 'center', justifyContent: 'center' }}>
+                <Feather name="check" size={14} color={C.onDarkAccent} />
               </View>
               <View style={{ flex: 1, gap: 1 }}>
-                <Txt v="title" color="#FFFFFF">{p.title}</Txt>
-                <Txt v="small" color={C.darkMuted} style={{ fontSize: 13 }}>{p.text}</Txt>
+                <Txt v="title" color={C.onDark}>{p.title}</Txt>
+                <Txt v="small" color={C.onDarkMuted} style={{ fontSize: 13 }}>{p.text}</Txt>
               </View>
             </Row>
           ))}
@@ -92,8 +92,8 @@ export default function Premium() {
         ) : (
           <>
             <Btn label="Попробовать 7 дней бесплатно" kind="light" onPress={() => { setPremium(true); goBack('/profile'); }} />
-            <Txt v="small" color={C.darkMuted} center>{cur.after}. Отмена в любой момент. Демо: оплата не списывается.</Txt>
-            <Btn label="Только на одну поездку? Пакет «Отпуск» — 399 ₽" kind="ghost" small onPress={() => { setPremium(true); goBack('/profile'); }} />
+            <Txt v="small" color={C.onDarkMuted} center>{cur.after}. Отмена в любой момент. Демо: оплата не списывается.</Txt>
+            <Btn label="Только на одну поездку? Пакет «Отпуск» — 399 ₽" kind="ghost" color={C.onDarkAccent} small onPress={() => { setPremium(true); goBack('/profile'); }} />
           </>
         )}
       </View>

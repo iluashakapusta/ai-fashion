@@ -22,7 +22,7 @@ export default function Feed() {
         {section === 'community' && <IconButton icon="plus" label="Опубликовать образ" dark onPress={() => router.push('/post/new')} />}
       </Row>
 
-      <View accessibilityRole="tablist" style={{ flexDirection: 'row', backgroundColor: C.surface, borderRadius: 24, padding: 4 }}>
+      <View accessibilityRole="tablist" style={{ flexDirection: 'row', backgroundColor: C.surface, borderRadius: 10, padding: 4 }}>
         {(['news', 'community'] as Section[]).map((s) => {
           const on = section === s;
           return (
@@ -31,7 +31,7 @@ export default function Feed() {
               accessibilityRole="tab"
               accessibilityState={{ selected: on }}
               onPress={() => setSection(s)}
-              style={{ flex: 1, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', backgroundColor: on ? C.ground : 'transparent' }}
+              style={{ flex: 1, height: 40, borderRadius: 3, alignItems: 'center', justifyContent: 'center', backgroundColor: on ? C.card : 'transparent' }}
             >
               <Txt v="bodyB" color={on ? C.ink : C.muted}>{s === 'news' ? 'Новости' : 'Сообщество'}</Txt>
             </Pressable>
@@ -41,9 +41,9 @@ export default function Feed() {
 
       {section === 'news' ? (
         NEWS.map((n) => (
-          <View key={n.id} style={{ borderRadius: 22, overflow: 'hidden', borderWidth: 1, borderColor: C.line }}>
+          <View key={n.id} style={{ borderRadius: 10, overflow: 'hidden', borderWidth: 1, borderColor: C.line }}>
             <View style={{ height: 120, backgroundColor: n.color, padding: 16, justifyContent: 'flex-end' }}>
-              <View style={{ alignSelf: 'flex-start', height: 26, paddingHorizontal: 10, borderRadius: 13, backgroundColor: '#FFFFFF', justifyContent: 'center' }}>
+              <View style={{ alignSelf: 'flex-start', height: 26, paddingHorizontal: 10, borderRadius: 3, backgroundColor: C.card, justifyContent: 'center' }}>
                 <Txt v="small" color={C.ink} style={{ fontFamily: F.b }}>{n.tag}</Txt>
               </View>
             </View>
@@ -66,7 +66,7 @@ export default function Feed() {
                   onPress={() => router.push({ pathname: '/channel/[id]', params: { id: c.id } })}
                   style={{ width: 76, alignItems: 'center', gap: 6 }}
                 >
-                  <View style={{ padding: 2, borderRadius: 32, borderWidth: 2, borderColor: subscriptions.includes(c.id) ? C.accent : 'transparent' }}>
+                  <View style={{ padding: 2, borderRadius: 10, borderWidth: 2, borderColor: subscriptions.includes(c.id) ? C.accent : 'transparent' }}>
                     <Avatar name={c.name} color={c.color} size={56} />
                   </View>
                   <Txt v="small" color={C.ink} center lines={2} style={{ fontSize: 11 }}>{c.name}</Txt>
@@ -77,7 +77,7 @@ export default function Feed() {
           </View>
 
           {myPosts.length === 0 && (
-            <View style={{ borderRadius: 22, backgroundColor: C.accentSoft, padding: 16, gap: 10 }}>
+            <View style={{ borderRadius: 10, backgroundColor: C.accentSoft, padding: 16, gap: 10 }}>
               <Txt v="title">Покажи свой образ</Txt>
               <Txt>Собери образ из своего гардероба и опубликуй — в общей ленте или в тематическом канале.</Txt>
               <Btn label="Опубликовать образ" kind="accent" small icon="plus" style={{ alignSelf: 'flex-start' }} onPress={() => router.push('/post/new')} />

@@ -29,11 +29,11 @@ export default function Orders() {
           <View key={group[0].purchaseId} style={{ gap: 10 }}>
             <Card tone="dark" style={{ gap: 8 }}>
               <Row gap={8}>
-                <Feather name="check" size={16} color="#9FE3B8" />
-                <Txt v="label" color="#9FE3B8">{gi === 0 ? 'Оплачено' : 'Покупка'}</Txt>
+                <Feather name="check" size={16} color={C.onDarkAccent} />
+                <Txt v="label" color={C.onDarkAccent}>{gi === 0 ? 'Оплачено' : 'Покупка'}</Txt>
               </Row>
-              <Txt v="h2" color="#FFFFFF">{rub(total)} · {group.length} {plural(group.length, ['заказ', 'заказа', 'заказов'])}</Txt>
-              <Txt v="small" color={C.darkMuted}>Одна оплата — {group.length} {plural(group.length, ['продавец', 'продавца', 'продавцов'])}. Всё придёт до {shortDate(new Date(last))}.</Txt>
+              <Txt v="h2" color={C.onDark}>{rub(total)} · {group.length} {plural(group.length, ['заказ', 'заказа', 'заказов'])}</Txt>
+              <Txt v="small" color={C.onDarkMuted}>Одна оплата — {group.length} {plural(group.length, ['продавец', 'продавца', 'продавцов'])}. Всё придёт до {shortDate(new Date(last))}.</Txt>
             </Card>
             {group.map((o) => {
               const seller = SELLERS.find((s) => s.id === o.sellerId)!;

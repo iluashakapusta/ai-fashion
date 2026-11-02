@@ -76,7 +76,7 @@ export default function NewItem() {
   if (stage === 'pick') {
     return (
       <Screen header={<BackBar label="Гардероб" title="Новая вещь" fallback="/wardrobe" />} edges={['top', 'bottom']}>
-        <View style={{ height: 240, borderRadius: 24, backgroundColor: C.surface, alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+        <View style={{ height: 240, borderRadius: 10, backgroundColor: C.surface, alignItems: 'center', justifyContent: 'center', gap: 10 }}>
           <Feather name="camera" size={40} color={C.muted} />
           <Txt v="small" center style={{ maxWidth: 240 }}>Сфотографируй вещь на любом фоне — AI сам удалит фон и заполнит описание</Txt>
         </View>
@@ -95,7 +95,7 @@ export default function NewItem() {
           {STEPS.map((s, i) => (
             <Row key={s} gap={10}>
               <View style={{ width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: i < done ? C.ok : C.surface }}>
-                {i < done && <Feather name="check" size={14} color="#FFFFFF" />}
+                {i < done && <Feather name="check" size={14} color={C.ground} />}
               </View>
               <Txt color={i < done ? C.ink : C.muted}>{s}</Txt>
             </Row>
@@ -117,7 +117,7 @@ export default function NewItem() {
     >
       <View>
         <GarmentTile item={preview} radius={24} style={{ height: 220, aspectRatio: undefined }} />
-        <View style={{ position: 'absolute', top: 12, left: 12, flexDirection: 'row', alignItems: 'center', gap: 6, height: 30, paddingHorizontal: 12, borderRadius: 15, backgroundColor: '#FFFFFF' }}>
+        <View style={{ position: 'absolute', top: 12, left: 12, flexDirection: 'row', alignItems: 'center', gap: 6, height: 30, paddingHorizontal: 12, borderRadius: 3, backgroundColor: C.card }}>
           <Feather name="check" size={14} color={C.ok} />
           <Txt v="small" color={C.ink}>{d.photoUri ? 'Фото обработано' : 'Фон удалён'}</Txt>
         </View>
@@ -130,10 +130,10 @@ export default function NewItem() {
       </Row>
 
       <Field label="Название">
-        <TextInput accessibilityLabel="Название" value={d.name} onChangeText={(name) => setD({ ...d, name })} style={inputStyle} />
+        <TextInput accessibilityLabel="Название" value={d.name} onChangeText={(name) => setD({ ...d, name })} style={inputStyle()} />
       </Field>
       <Field label="Материал">
-        <TextInput accessibilityLabel="Материал" value={d.material} onChangeText={(material) => setD({ ...d, material })} style={inputStyle} />
+        <TextInput accessibilityLabel="Материал" value={d.material} onChangeText={(material) => setD({ ...d, material })} style={inputStyle()} />
       </Field>
 
       <Group label="Тип">
@@ -173,11 +173,12 @@ export default function NewItem() {
   );
 }
 
-const inputStyle = { fontFamily: F.b, fontSize: 15, color: C.ink, height: 28, padding: 0 } as const;
+// A function, not a constant: theme colours and fonts are read at render time.
+const inputStyle = () => ({ fontFamily: F.b, fontSize: 15, color: C.ink, height: 28, padding: 0 }) as const;
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <View style={{ borderWidth: 1, borderColor: C.line, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10, gap: 4 }}>
+    <View style={{ borderWidth: 1, borderColor: C.line, borderRadius: 6, paddingHorizontal: 14, paddingVertical: 10, gap: 4 }}>
       <Txt v="label">{label}</Txt>
       {children}
     </View>

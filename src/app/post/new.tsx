@@ -54,7 +54,7 @@ export default function NewPost() {
               <GarmentTile item={w} radius={14} ring={on} />
               {on && (
                 <View style={{ position: 'absolute', top: 4, right: 4, width: 22, height: 22, borderRadius: 11, backgroundColor: C.accent, alignItems: 'center', justifyContent: 'center' }}>
-                  <Feather name="check" size={13} color="#FFFFFF" />
+                  <Feather name="check" size={13} color={C.onAccent} />
                 </View>
               )}
             </Pressable>
@@ -62,7 +62,7 @@ export default function NewPost() {
         })}
       </View>
 
-      <View style={{ borderWidth: 1, borderColor: C.line, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10, gap: 4 }}>
+      <View style={{ borderWidth: 1, borderColor: C.line, borderRadius: 6, paddingHorizontal: 14, paddingVertical: 10, gap: 4 }}>
         <Txt v="label">Подпись</Txt>
         <TextInput
           accessibilityLabel="Подпись"

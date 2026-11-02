@@ -44,7 +44,7 @@ export default function Stylist() {
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: C.ground }}>
       <Row gap={10} style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: C.line }}>
         <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: C.accent, alignItems: 'center', justifyContent: 'center' }}>
-          <Feather name="zap" size={18} color="#FFFFFF" />
+          <Feather name="zap" size={18} color={C.onAccent} />
         </View>
         <View style={{ flex: 1 }}>
           <Txt v="h2">AI-стилист</Txt>
@@ -65,7 +65,7 @@ export default function Stylist() {
             <View style={{ gap: 8 }}>
               <Txt v="label">Попробуй спросить</Txt>
               {SUGGESTIONS.map((s) => (
-                <Pressable key={s} accessibilityRole="button" onPress={() => send(s)} style={({ pressed }) => ({ backgroundColor: C.ground, borderRadius: 16, padding: 12, borderWidth: 1, borderColor: C.line, opacity: pressed ? 0.7 : 1 })}>
+                <Pressable key={s} accessibilityRole="button" onPress={() => send(s)} style={({ pressed }) => ({ backgroundColor: C.card, borderRadius: 8, padding: 12, borderWidth: 1, borderColor: C.line, opacity: pressed ? 0.7 : 1 })}>
                   <Txt lines={2}>«{s}»</Txt>
                 </Pressable>
               ))}
@@ -82,10 +82,10 @@ export default function Stylist() {
             placeholder="Например: образ на свадьбу друга"
             placeholderTextColor={C.muted}
             returnKeyType="send"
-            style={{ flex: 1, height: 46, borderRadius: 23, backgroundColor: C.surface, paddingHorizontal: 16, fontFamily: F.m, fontSize: 14, color: C.ink }}
+            style={{ flex: 1, height: 46, borderRadius: 3, backgroundColor: C.surface, paddingHorizontal: 16, fontFamily: F.m, fontSize: 14, color: C.ink }}
           />
           <Pressable accessibilityRole="button" accessibilityLabel="Отправить" onPress={() => send()} style={{ width: 46, height: 46, borderRadius: 23, backgroundColor: C.accent, alignItems: 'center', justifyContent: 'center' }}>
-            <Feather name="arrow-up" size={20} color="#FFFFFF" />
+            <Feather name="arrow-up" size={20} color={C.onAccent} />
           </Pressable>
         </Row>
       </KeyboardAvoidingView>
@@ -97,8 +97,8 @@ function Message({ m }: { m: ChatMessage }) {
   const { looks, addLooksToCart, products } = useStore();
   if (m.role === 'user') {
     return (
-      <View style={{ alignSelf: 'flex-end', maxWidth: '85%', backgroundColor: C.dark, borderRadius: 20, borderBottomRightRadius: 6, paddingVertical: 12, paddingHorizontal: 16 }}>
-        <Txt color="#FFFFFF">{m.text}</Txt>
+      <View style={{ alignSelf: 'flex-end', maxWidth: '85%', backgroundColor: C.dark, borderRadius: 10, borderBottomRightRadius: 6, paddingVertical: 12, paddingHorizontal: 16 }}>
+        <Txt color={C.onDark}>{m.text}</Txt>
       </View>
     );
   }
@@ -109,7 +109,7 @@ function Message({ m }: { m: ChatMessage }) {
 
   return (
     <View style={{ gap: 10 }}>
-      <View style={{ backgroundColor: C.ground, borderRadius: 20, borderBottomLeftRadius: 6, padding: 14, gap: 12 }}>
+      <View style={{ backgroundColor: C.card, borderRadius: 10, borderBottomLeftRadius: 6, padding: 14, gap: 12 }}>
         {m.chips && <Row gap={6} wrap>{m.chips.map((c) => <Chip key={c} label={c} tone="soft" />)}</Row>}
         <Txt>{m.text}</Txt>
         {lookList.length > 0 && (

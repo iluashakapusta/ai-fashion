@@ -98,7 +98,7 @@ export default function Cart() {
           {CHECKS.map((c, i) => (
             <Row key={c} gap={10}>
               <View style={{ width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center', backgroundColor: i < done ? C.ok : C.surface }}>
-                {i < done && <Feather name="check" size={13} color="#FFFFFF" />}
+                {i < done && <Feather name="check" size={13} color={C.ground} />}
               </View>
               <Txt color={i < done ? C.ink : C.muted}>{c}</Txt>
             </Row>

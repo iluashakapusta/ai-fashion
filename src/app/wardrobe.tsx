@@ -41,7 +41,7 @@ export default function Wardrobe() {
         <IconButton icon="plus" label="Добавить вещь" dark onPress={() => router.push('/item/new')} />
       </Row>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, height: 46, paddingHorizontal: 14, borderRadius: 23, backgroundColor: C.surface }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, height: 46, paddingHorizontal: 14, borderRadius: 3, backgroundColor: C.surface }}>
         <Feather name="search" size={18} color={C.muted} />
         <TextInput
           accessibilityLabel="Поиск по гардеробу"

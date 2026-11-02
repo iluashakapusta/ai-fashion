@@ -6,11 +6,13 @@ import { GarmentTile } from '../../components/GarmentIcon';
 import { Btn, Card, Chip, Divider, IconButton, Row, Screen, ToggleRow, Txt, type IconName } from '../../components/ui';
 import { countOutfits } from '../../engine/stylist';
 import { useStore } from '../../store/AppStore';
-import { C, plural } from '../../theme';
+import { useTheme } from '../../store/ThemeStore';
+import { C, plural, themeById } from '../../theme';
 
 export default function Profile() {
   const { premium, setPremium, settings, updateSettings, orders, cart, reset, wardrobe } = useStore();
   const outfits = countOutfits(wardrobe);
+  const { themeId } = useTheme();
 
   const confirmReset = () => {
     if (Platform.OS === 'web') {
@@ -48,8 +50,8 @@ export default function Profile() {
       </Card>
 
       <Card tone="dark" style={{ gap: 12 }}>
-        <Txt v="label" color="#9AA4FF">{premium ? 'Premium активен' : 'Бесплатная версия'}</Txt>
-        <Txt v="h2" color="#FFFFFF">{premium ? 'Стилист без ограничений, кэшбэк 5% и бесплатная доставка' : 'Личный стилист, который окупается'}</Txt>
+        <Txt v="label" color={C.onDarkAccent}>{premium ? 'Premium активен' : 'Бесплатная версия'}</Txt>
+        <Txt v="h2" color={C.onDark}>{premium ? 'Стилист без ограничений, кэшбэк 5% и бесплатная доставка' : 'Личный стилист, который окупается'}</Txt>
         {premium ? (
           <Btn label="Отменить подписку" kind="light" small onPress={() => setPremium(false)} style={{ alignSelf: 'flex-start' }} />
         ) : (
@@ -61,6 +63,8 @@ export default function Profile() {
         <NavRow icon="package" label="Мои заказы" hint={orders.length ? `${orders.length} в работе` : 'Пока нет заказов'} onPress={() => router.push('/orders')} />
         <Divider />
         <NavRow icon="shopping-cart" label="Корзина" hint={cart.length ? `${cart.length} ${plural(cart.length, ['товар', 'товара', 'товаров'])}` : undefined} onPress={() => router.push('/cart')} />
+        <Divider />
+        <NavRow icon="droplet" label="Оформление" hint={`${themeById(themeId).name} · цвета и шрифты`} onPress={() => router.push('/theme')} />
       </View>
 
       <Collapsible icon="link" title="Источники данных" hint="Календарь, геолокация и погода">
@@ -99,7 +103,7 @@ export default function Profile() {
 function Collapsible({ icon, title, hint, children }: { icon: IconName; title: string; hint: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
-    <View style={{ borderRadius: 22, borderWidth: 1, borderColor: C.line, paddingHorizontal: 16 }}>
+    <View style={{ borderRadius: 10, borderWidth: 1, borderColor: C.line, paddingHorizontal: 16 }}>
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
