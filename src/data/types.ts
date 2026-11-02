@@ -33,7 +33,18 @@ export interface Product extends Garment {
   /** Paid promotion. Always labelled «Реклама» and never used by the independent AI stylist. */
   sponsored?: boolean;
   description: string;
+  /** Brand name as sold; plain shop basics have none. */
+  brand?: string;
+  condition?: Condition;
 }
+
+export type Condition = 'new' | 'likeNew' | 'used';
+
+export const CONDITION_LABEL: Record<Condition, string> = {
+  new: 'Новое',
+  likeNew: 'Как новое',
+  used: 'С ноской',
+};
 
 export type SellerType = 'shop' | 'brand' | 'private' | 'partner';
 

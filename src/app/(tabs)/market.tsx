@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, TextInput, View } from 'react-native';
 import { Avatar } from '../../components/PostCard';
+import { BrandsView } from '../../components/BrandsView';
 import { ProductCard } from '../../components/ProductCard';
 import { Card, Chip, IconButton, Row, Screen, Txt } from '../../components/ui';
 import { KIND_LABEL, type Kind } from '../../data/types';
@@ -22,6 +23,7 @@ export default function Market() {
   const [sort, setSort] = useState<Sort>('match');
   const [onlyFav, setOnlyFav] = useState(false);
   const [q, setQ] = useState('');
+  const [mode, setMode] = useState<'catalog' | 'brands'>('catalog');
 
   const compat = useMemo(() => Object.fromEntries(products.map((p) => [p.id, compatCount(p, wardrobe)])), [products, wardrobe]);
 
@@ -47,6 +49,25 @@ export default function Market() {
         </Row>
       </Row>
 
+      <View accessibilityRole="tablist" style={{ flexDirection: 'row', backgroundColor: C.surface, borderRadius: 6, padding: 4 }}>
+        {(['catalog', 'brands'] as const).map((m) => {
+          const on = mode === m;
+          return (
+            <Pressable
+              key={m}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: on }}
+              onPress={() => setMode(m)}
+              style={{ flex: 1, height: 40, borderRadius: 3, alignItems: 'center', justifyContent: 'center', backgroundColor: on ? C.card : 'transparent' }}
+            >
+              <Txt v="bodyB" color={on ? C.ink : C.muted}>{m === 'catalog' ? 'Каталог' : 'Бренды'}</Txt>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      {mode === 'brands' ? <BrandsView /> : (
+      <>
       <View style={{ gap: 10 }}>
         <Txt v="h2">Магазины</Txt>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }} style={{ marginHorizontal: -20, paddingHorizontal: 20, flexGrow: 0 }}>
@@ -108,6 +129,8 @@ export default function Market() {
         {organic.map((p) => <ProductCard key={p.id} p={p} compat={compat[p.id]} />)}
       </View>
       {!list.length && <Txt v="small">Ничего не нашлось.</Txt>}
+      </>
+      )}
     </Screen>
   );
 }

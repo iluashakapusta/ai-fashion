@@ -50,6 +50,8 @@ export const SELLERS: Seller[] = [
   { id: 's3', name: 'Марина · частный продавец', type: 'private', rating: 4.9, city: 'Москва' },
   { id: 's4', name: 'Партнёрский маркетплейс', type: 'partner', rating: 4.6, city: 'Склад в Подмосковье' },
   { id: 's5', name: 'Обувная мастерская', type: 'shop', rating: 4.8, city: 'Казань' },
+  { id: 's6', name: 'Кирилл · ресейл', type: 'private', rating: 4.9, city: 'Москва' },
+  { id: 's7', name: 'Ресейл-шоурум', type: 'shop', rating: 4.8, city: 'Санкт-Петербург' },
 ];
 
 export const SHOP_INFO: Record<string, { color: string; about: string }> = {
@@ -58,6 +60,8 @@ export const SHOP_INFO: Record<string, { color: string; about: string }> = {
   s3: { color: '#6B5B45', about: 'Продаю вещи из своего гардероба в отличном состоянии. Отправляю в день оплаты.' },
   s4: { color: '#3D5A73', about: 'Товары партнёрской площадки: большой выбор базовых вещей и аксессуаров.' },
   s5: { color: '#5A4632', about: 'Кожаная обувь ручной работы. Мастерская в Казани, доставка по всей России.' },
+  s6: { color: '#3D4B5C', about: 'Продаю оригинальные вещи из своей коллекции и под заказ. Проверка подлинности перед отправкой.' },
+  s7: { color: '#8A6D3B', about: 'Шоурум брендовых вещей: новые и в отличном состоянии. Каждая вещь проходит проверку подлинности.' },
 };
 
 export const SELLER_TYPE_LABEL = {
@@ -122,6 +126,39 @@ export const PRODUCTS: Product[] = [
     'Высокая посадка, не просвечивают.'),
   p(g('p20', 'Льняной пиджак', 'outer', '#D7CBB5', 'песочный', 'warm', ['evening', 'office', 'date', 'interview'], ['hot', 'warm'], 'лён'), 's2', 8990, 2,
     'Пиджак без подкладки для жаркого лета.', { sponsored: true, reviews: 97 }),
+  // Branded resale: shops, resellers and private sellers.
+  ...[
+    p(g('p21', 'Supreme Box Logo худи', 'top', '#8B1E2A', 'красный', 'bright', ['casual', 'party'], ['cool', 'cold'], 'хлопок'), 's6', 24900, 2,
+      'Оригинал, носил один сезон. Чек и бирки сохранились.', { brand: 'Supreme', condition: 'used', stock: 1, reviews: 18 }),
+    p(g('p22', 'Supreme кепка Camp Cap', 'acc', '#1C1C1C', 'чёрный', 'neutral', ['casual', 'party'], ['hot', 'warm', 'cool'], 'хлопок'), 's7', 6500, 2,
+      'Надета пару раз, без дефектов.', { brand: 'Supreme', condition: 'likeNew', stock: 1 }),
+    p(g('p23', 'Supreme футболка', 'top', '#FFFFFF', 'белый', 'neutral', ['casual', 'party'], ['hot', 'warm'], 'хлопок'), 's6', 7900, 2,
+      'Новая, с бирками. Размер M.', { brand: 'Supreme', condition: 'new', stock: 1, sizes: ['M'] }),
+    p(g('p24', 'Stone Island свитшот', 'top', '#3B4A5C', 'тёмно-синий', 'cool', ['casual', 'date'], ['cool', 'cold'], 'хлопок'), 's7', 14900, 3,
+      'Патч на месте, состояние отличное.', { brand: 'Stone Island', condition: 'likeNew', stock: 1 }),
+    p(g('p25', 'Stone Island куртка Soft Shell', 'outer', '#2B2F36', 'графит', 'neutral', ['casual'], ['cool'], 'мембрана'), 's6', 29000, 2,
+      'Носил два сезона, есть лёгкие следы носки.', { brand: 'Stone Island', condition: 'used', stock: 1 }),
+    p(g('p26', 'Ralph Lauren поло', 'top', '#1D3557', 'тёмно-синий', 'cool', ['casual', 'date', 'office'], ['hot', 'warm'], 'хлопок'), 's3', 4200, 3,
+      'Классическое поло, надето пару раз.', { brand: 'Ralph Lauren', condition: 'likeNew', stock: 1 }),
+    p(g('p27', 'Ralph Lauren кашемировый свитер', 'top', '#D8C8AA', 'бежевый', 'warm', ['casual', 'office', 'date'], ['cool', 'cold'], 'кашемир'), 's7', 9800, 3,
+      'Кашемир, без катышков после чистки.', { brand: 'Ralph Lauren', condition: 'used', stock: 1 }),
+    p(g('p28', 'Carhartt WIP куртка Detroit', 'outer', '#8A6D3B', 'коричневый', 'warm', ['casual'], ['cool'], 'хлопок'), 's6', 12500, 2,
+      'Красиво потёртая, без дыр.', { brand: 'Carhartt WIP', condition: 'used', stock: 1 }),
+    p(g('p29', 'Carhartt WIP брюки', 'bottom', '#4B4237', 'тёмно-коричневый', 'warm', ['casual'], ['warm', 'cool', 'cold'], 'хлопок'), 's7', 8900, 3,
+      'Новые, с бирками.', { brand: 'Carhartt WIP', condition: 'new', stock: 2 }),
+    p(g('p30', 'The North Face пуховик Nuptse', 'outer', '#1C1C1C', 'чёрный', 'neutral', ['casual'], ['cold'], 'пух'), 's7', 21000, 3,
+      'Один сезон, хранился в чехле.', { brand: 'The North Face', condition: 'likeNew', stock: 1 }),
+    p(g('p31', 'New Balance 990v6', 'shoes', '#9A9C9F', 'серый', 'neutral', ['casual', 'sport'], ['warm', 'cool'], 'замша'), 's6', 23500, 2,
+      'Новые, в коробке.', { brand: 'New Balance', condition: 'new', stock: 1 }),
+    p(g('p32', 'Nike Air Force 1', 'shoes', '#F5F5F3', 'белый', 'neutral', ['casual', 'sport', 'date'], ['hot', 'warm', 'cool'], 'кожа'), 's7', 11900, 3,
+      'Новые, оригинал.', { brand: 'Nike', condition: 'new', stock: 3 }),
+    p(g('p33', "Levi's 501", 'bottom', '#4E6A8C', 'синий', 'cool', ['casual', 'date'], ['warm', 'cool', 'cold'], 'деним'), 's3', 3500, 3,
+      'Классические 501, слегка потёртые.', { brand: "Levi's", condition: 'used', stock: 1 }),
+    p(g('p34', "Arc'teryx куртка Beta", 'outer', '#2C3E2F', 'тёмно-зелёный', 'cool', ['casual', 'sport'], ['cool'], 'мембрана'), 's6', 34000, 2,
+      'Носил один поход, как новая.', { brand: "Arc'teryx", condition: 'likeNew', stock: 1 }),
+    p(g('p35', 'Max Mara пальто', 'outer', '#C2A27A', 'кэмел', 'warm', ['office', 'date', 'evening'], ['cool', 'cold'], 'шерсть'), 's3', 39000, 4,
+      'Культовое пальто, носила три сезона, после химчистки.', { brand: 'Max Mara', condition: 'used', stock: 1, sizes: ['S'] }),
+  ],
 ];
 
 export const WEATHER = {
@@ -155,3 +192,24 @@ export function demoEvents(now: Date): CalendarEvent[] {
     { id: 'e3', title: 'Отпуск · вылет', when: at(9, 7), place: 'Тёплая страна, 10 дней', weather: '+29°, солнце', prompt: 'Собери мне 5 образов для отпуска в тёплой стране на 10 дней. Бюджет — 30 000 рублей. Нужна одежда для пляжа, прогулок, ресторанов и вечерних выходов.' },
   ];
 }
+
+export interface BrandSummary {
+  name: string;
+  count: number;
+  minPrice: number;
+}
+
+/** Brands that currently have something on sale, A–Z. */
+export function brandsOnSale(products: Product[]): BrandSummary[] {
+  const map = new Map<string, BrandSummary>();
+  for (const p of products) {
+    if (!p.brand || p.stock === 0) continue;
+    const b = map.get(p.brand) ?? { name: p.brand, count: 0, minPrice: Infinity };
+    b.count += 1;
+    b.minPrice = Math.min(b.minPrice, p.price);
+    map.set(p.brand, b);
+  }
+  return [...map.values()].sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export const POPULAR_BRANDS = ['Supreme', 'Stone Island', 'Ralph Lauren', 'The North Face', 'New Balance', 'Carhartt WIP'];

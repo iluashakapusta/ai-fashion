@@ -1,10 +1,11 @@
 import Feather from '@expo/vector-icons/Feather';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { GarmentTile } from '../../components/GarmentIcon';
 import { AdBadge, BackBar, Btn, Card, Chip, IconButton, Row, Screen, Txt } from '../../components/ui';
 import { SELLERS, SELLER_TYPE_LABEL } from '../../data/demo';
+import { CONDITION_LABEL } from '../../data/types';
 import { harmonize, newOutfitsWith } from '../../engine/stylist';
 import { useStore } from '../../store/AppStore';
 import { C, F, addDays, plural, rub, shortDate } from '../../theme';
@@ -53,7 +54,13 @@ export default function ProductScreen() {
       </View>
 
       <View style={{ gap: 4 }}>
+        {p.brand ? (
+          <Pressable accessibilityRole="link" onPress={() => router.push({ pathname: '/brand/[name]', params: { name: p.brand! } })}>
+            <Txt v="label" color={C.accent}>{p.brand} · все предложения бренда</Txt>
+          </Pressable>
+        ) : null}
         <Txt v="display" style={{ fontSize: 22 }}>{p.name}</Txt>
+        {p.condition ? <Txt v="small">Состояние: {CONDITION_LABEL[p.condition].toLowerCase()}</Txt> : null}
         <Row gap={6}>
           <Feather name="star" size={14} color={C.adInk} />
           <Txt v="small">{p.rating.toFixed(1).replace('.', ',')} · {p.reviews} {plural(p.reviews, ['отзыв', 'отзыва', 'отзывов'])} · {p.colorName}{p.material ? ` · ${p.material}` : ''}</Txt>
