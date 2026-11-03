@@ -1,11 +1,12 @@
 import Feather from '@expo/vector-icons/Feather';
 import { Link, router } from 'expo-router';
 import { useMemo } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import { GarmentTile } from '../../components/GarmentIcon';
+import { ProductCard } from '../../components/ProductCard';
 import { Btn, Card, IconButton, Row, Screen, Txt } from '../../components/ui';
 import { WEATHER, demoEvents } from '../../data/demo';
-import { planLooks } from '../../engine/stylist';
+import { compatCount, dealsOfTheDay, planLooks } from '../../engine/stylist';
 import { useStore } from '../../store/AppStore';
 import { C, longDate, shortDate } from '../../theme';
 
@@ -24,6 +25,9 @@ export default function Today() {
     );
     return plan.looks[0];
   }, [wardrobe, products, todayVariant]);
+
+  // Deals of the day: discounted and best-matching items, rotated daily; paid placements are not included.
+  const deals = useMemo(() => dealsOfTheDay(products, wardrobe, now), [products, wardrobe, now.toDateString()]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const askAbout = (q: string) => router.push({ pathname: '/stylist', params: { q } });
 
@@ -81,6 +85,20 @@ export default function Today() {
             );
           })}
         </Row>
+      </View>
+
+      <View style={{ gap: 10 }}>
+        <Row style={{ justifyContent: 'space-between' }}>
+          <Txt v="h2">Предложения дня</Txt>
+          <Pressable accessibilityRole="link" onPress={() => router.push('/market')} style={{ minHeight: 36, justifyContent: 'center' }}>
+            <Txt v="small" color={C.accent} style={{ fontSize: 13 }}>Весь маркет</Txt>
+          </Pressable>
+        </Row>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12 }} style={{ marginHorizontal: -20, paddingHorizontal: 20, flexGrow: 0 }}>
+          {deals.map((p) => <ProductCard key={p.id} p={p} compat={compatCount(p, wardrobe)} width={150} />)}
+          <View style={{ width: 20 }} />
+        </ScrollView>
+        <Txt v="small">Скидки и находки, которые сочетаются с твоим гардеробом. Обновляются каждый день.</Txt>
       </View>
 
       {settings.calendar ? (

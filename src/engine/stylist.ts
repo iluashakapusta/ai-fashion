@@ -342,3 +342,18 @@ export function gaps(wardrobe: Garment[], warmth: Warmth): string[] {
   void warmth;
   return out.slice(0, 3);
 }
+
+/**
+ * «Предложения дня» for the home screen: in-stock, non-sponsored products, discounted ones first,
+ * then the best matches for the wardrobe; the pick rotates with the date.
+ */
+export function dealsOfTheDay(products: Product[], wardrobe: Garment[], date: Date, count = 6): Product[] {
+  const day = Math.floor(date.getTime() / 86400000);
+  const pool = products.filter((p) => !p.sponsored && p.stock > 0);
+  const score = (p: Product) => {
+    const discount = p.oldPrice ? (p.oldPrice - p.price) / p.oldPrice : 0;
+    const rotation = ((day * 31 + p.id.split('').reduce((a, ch) => a + ch.charCodeAt(0), 0)) % 17) / 17;
+    return discount * 2 + compatCount(p, wardrobe) / 20 + rotation;
+  };
+  return [...pool].sort((a, b) => score(b) - score(a)).slice(0, count);
+}
