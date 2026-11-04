@@ -10,7 +10,7 @@ import { C, F, addDays, plural, rub, shortDate } from '../../theme';
 
 export default function LookScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { looks, replaceInLook, addLooksToCart, wardrobe } = useStore();
+  const { looks, replaceInLook, addLooksToCart, wardrobe, sizeFor } = useStore();
   const look = looks[id];
   const items = useLookItems(look);
 
@@ -67,7 +67,7 @@ export default function LookScreen() {
                   <Txt v="title" lines={1} style={{ flexShrink: 1 }}>{i.g.name}</Txt>
                   {p?.sponsored && <AdBadge />}
                 </Row>
-                <Txt v="small" lines={1}>{p ? `${seller?.name} · доставка ${shortDate(addDays(new Date(), p.deliveryDays))}` : 'Из твоего гардероба'}</Txt>
+                <Txt v="small" lines={1}>{p ? `${sizeFor(p).size ? `Размер ${sizeFor(p).size} · ` : ''}${seller?.name} · доставка ${shortDate(addDays(new Date(), p.deliveryDays))}` : 'Из твоего гардероба'}</Txt>
                 <Txt v="bodyB" color={p ? C.ink : C.ok}>{p ? rub(p.price) : 'Уже есть'}</Txt>
               </View>
             </>

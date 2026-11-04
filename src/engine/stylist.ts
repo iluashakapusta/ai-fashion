@@ -5,6 +5,7 @@
 import type { Garment, Kind, Look, LookItem, Occasion, Product, WardrobeItem, Warmth } from '../data/types';
 import { OCCASION_LABEL } from '../data/types';
 import { plural, rub } from '../theme';
+import { recommendSize, type BodyParams } from './sizing';
 
 // ---------- compatibility ----------
 
@@ -154,7 +155,11 @@ export function parseRequest(text: string, currentWarmth: Warmth): Brief {
 export interface Catalog {
   wardrobe: WardrobeItem[];
   products: Product[];
+  /** Buyer's measurements: products with no fitting size are not suggested. */
+  body?: BodyParams;
 }
+
+const sizeFits = (cat: Catalog, p: Product) => !cat.body || recommendSize(p, cat.body).ok;
 
 type Cand = { g: Garment; source: 'wardrobe' | 'product' };
 
@@ -186,7 +191,7 @@ const BUY_ROTATION: Kind[] = ['top', 'shoes', 'bottom', 'dress', 'top', 'acc'];
 function shopFor(cat: Catalog, slot: Kind, occasion: Occasion, warmth: Warmth, chosen: Garment[], ctx: PlanCtx): Cand | null {
   // Independent recommendation: paid placements are never used by the stylist.
   const shop = cat.products
-    .filter((p) => !p.sponsored && p.stock > 0 && !ctx.planned.has(p.id) && fits(p, slot, occasion, warmth, chosen) && p.price <= ctx.budgetLeft)
+    .filter((p) => !p.sponsored && p.stock > 0 && !ctx.planned.has(p.id) && fits(p, slot, occasion, warmth, chosen) && p.price <= ctx.budgetLeft && sizeFits(cat, p))
     .sort((a, b) => a.price / a.rating - b.price / b.rating);
   return shop.length ? { g: shop[0], source: 'product' } : null;
 }
@@ -214,18 +219,23 @@ function pick(cat: Catalog, slot: Kind, occasion: Occasion, warmth: Warmth, chos
   return shopFor(cat, slot, occasion, warmth, chosen, ctx);
 }
 
+const FALLBACK: Record<Occasion, Occasion[]> = {
+  party: ['evening', 'date'], evening: ['date', 'party'], date: ['evening', 'casual'], beach: ['casual'],
+  casual: ['date'], office: ['interview', 'casual'], interview: ['office'], sport: ['casual'],
+};
+
 function buildLook(cat: Catalog, id: string, title: string, occasion: Occasion, warmth: Warmth, ctx: PlanCtx, anchor?: WardrobeItem): Look {
   const dressOk = anchor ? anchor.kind === 'dress' : ['date', 'evening', 'party', 'beach', 'casual'].includes(occasion) && ctx.variant % 2 === 1;
-  const tryBuild = (useDress: boolean) => {
+  const tryBuild = (useDress: boolean, occ: Occasion = occasion) => {
     const chosen: Garment[] = anchor ? [anchor] : [];
     const items: LookItem[] = [];
     let spend = 0;
-    for (const slot of slotsFor(occasion, warmth, useDress)) {
+    for (const slot of slotsFor(occ, warmth, useDress)) {
       if (anchor && slot === anchor.kind) {
         items.push({ source: 'wardrobe', id: anchor.id, slot });
         continue;
       }
-      const c = pick(cat, slot, occasion, warmth, chosen, { ...ctx, budgetLeft: ctx.budgetLeft - spend });
+      const c = pick(cat, slot, occ, warmth, chosen, { ...ctx, budgetLeft: ctx.budgetLeft - spend });
       if (!c) {
         if (slot === 'dress') return null;
         continue;
@@ -236,7 +246,16 @@ function buildLook(cat: Catalog, id: string, title: string, occasion: Occasion, 
     }
     return items;
   };
-  const items = (dressOk && tryBuild(true)) || tryBuild(false) || [];
+  // A look needs shoes and either a dress or a top with a bottom. If the occasion
+  // cannot be covered (e.g. nothing in the buyer's size), borrow from a close occasion.
+  const complete = (it: LookItem[] | null) =>
+    !!it && it.some((i) => i.slot === 'shoes') && (it.some((i) => i.slot === 'dress') || (it.some((i) => i.slot === 'top') && it.some((i) => i.slot === 'bottom')));
+  let items: LookItem[] = [];
+  for (const occ of [occasion, ...FALLBACK[occasion]]) {
+    const attempt = (dressOk && tryBuild(true, occ)) || tryBuild(false, occ);
+    if (complete(attempt)) { items = attempt!; break; }
+    if (!items.length && attempt) items = attempt;
+  }
   if (anchor && !items.some((i) => i.id === anchor.id)) items.push({ source: 'wardrobe', id: anchor.id, slot: anchor.kind });
   for (const it of items) {
     ctx.used.set(it.id, (ctx.used.get(it.id) || 0) + 1);
@@ -325,7 +344,7 @@ export function alternatives(cat: Catalog, look: Look, index: number): Cand[] {
     .filter(Boolean) as Garment[];
   const own: Cand[] = cat.wardrobe.filter((w) => fits(w, slot, look.occasion, look.warmth, others)).map((g) => ({ g, source: 'wardrobe' }));
   const shop: Cand[] = cat.products
-    .filter((p) => p.stock > 0 && fits(p, slot, look.occasion, look.warmth, others))
+    .filter((p) => p.stock > 0 && fits(p, slot, look.occasion, look.warmth, others) && sizeFits(cat, p))
     .sort((a, b) => a.price - b.price)
     .map((g) => ({ g, source: 'product' }));
   return [...own, ...shop];

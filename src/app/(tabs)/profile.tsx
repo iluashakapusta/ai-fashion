@@ -5,11 +5,12 @@ import { Alert, Platform, Pressable, View } from 'react-native';
 import { GarmentTile } from '../../components/GarmentIcon';
 import { Btn, Card, Chip, Divider, IconButton, Row, Screen, ToggleRow, Txt, type IconName } from '../../components/ui';
 import { countOutfits } from '../../engine/stylist';
+import { bodyFilled, summarySizes } from '../../engine/sizing';
 import { useStore } from '../../store/AppStore';
 import { C, plural } from '../../theme';
 
 export default function Profile() {
-  const { premium, setPremium, settings, updateSettings, orders, cart, reset, wardrobe } = useStore();
+  const { premium, setPremium, settings, updateSettings, orders, cart, reset, wardrobe, body } = useStore();
   const outfits = countOutfits(wardrobe);
 
   const confirmReset = () => {
@@ -46,6 +47,23 @@ export default function Profile() {
         </Link>
         <Btn label="Открыть гардероб" kind="outline" small onPress={() => router.push('/wardrobe')} />
       </Card>
+
+      <Pressable accessibilityRole="link" onPress={() => router.push('/body')}>
+        <Card style={{ gap: 6 }}>
+          <Row style={{ justifyContent: 'space-between' }}>
+            <Txt v="h2">Мои параметры</Txt>
+            <Feather name="chevron-right" size={20} color={C.muted} />
+          </Row>
+          {bodyFilled(body) ? (
+            <>
+              <Txt>{[body.height && `${body.height} см`, body.weight && `${body.weight} кг`, `грудь ${body.chest}`, `талия ${body.waist}`, `бёдра ${body.hips}`].filter(Boolean).join(' · ')}</Txt>
+              <Txt v="small" color={C.accent}>{summarySizes(body)} — стилист подбирает вещи сразу с размером</Txt>
+            </>
+          ) : (
+            <Txt v="small" color={C.adInk}>Укажи рост, вес и обхваты — стилист будет подбирать вещи сразу с размером</Txt>
+          )}
+        </Card>
+      </Pressable>
 
       <Card tone="dark" style={{ gap: 12 }}>
         <Txt v="label" color={C.onDarkAccent}>{premium ? 'Premium активен' : 'Бесплатная версия'}</Txt>

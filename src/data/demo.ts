@@ -1,5 +1,6 @@
 // Demo data: a sample wardrobe, marketplace catalogue and sellers.
 // Everything here is invented for the demo build.
+import { defaultChart, type BodyParams } from '../engine/sizing';
 import { addDays } from '../theme';
 import type { Garment, Kind, Occasion, Product, Seller, Tone, WardrobeItem, Warmth } from './types';
 
@@ -78,12 +79,18 @@ function p(
   base: Garment, sellerId: string, price: number, deliveryDays: number, description: string,
   extra: Partial<Product> = {},
 ): Product {
-  return {
+  const prod: Product = {
     ...base, sellerId, price, deliveryDays, description,
     sizes: base.kind === 'shoes' ? SHOE : base.kind === 'acc' ? ['Один размер'] : S,
     stock: 12, rating: 4.7, reviews: 48, ...extra,
   };
+  // Every seller fills in a size chart; demo products get the standard one.
+  if (!prod.sizeChart && base.kind !== 'acc') prod.sizeChart = defaultChart(base.kind, prod.sizes);
+  return prod;
 }
+
+/** Demo buyer's measurements, prefilled so size advice is visible right away. */
+export const DEMO_BODY: BodyParams = { height: 178, weight: 74, chest: 98, waist: 82, hips: 98, foot: 26.5, fit: 'regular' };
 
 export const PRODUCTS: Product[] = [
   p(g('p1', 'Льняная рубашка', 'top', '#E9E1D0', 'молочный', 'warm', ['evening', 'date', 'casual', 'beach'], ['hot', 'warm'], 'лён'), 's1', 3990, 3,

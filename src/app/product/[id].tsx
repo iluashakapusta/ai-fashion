@@ -3,16 +3,18 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { GarmentTile } from '../../components/GarmentIcon';
-import { AdBadge, BackBar, Btn, Card, Chip, IconButton, Row, Screen, Txt } from '../../components/ui';
+import { AdBadge, BackBar, Btn, Card, Chip, IconButton, R, Row, Screen, Txt } from '../../components/ui';
 import { SELLERS, SELLER_TYPE_LABEL } from '../../data/demo';
 import { CONDITION_LABEL } from '../../data/types';
+import { chartRows } from '../../engine/sizing';
 import { harmonize, newOutfitsWith } from '../../engine/stylist';
 import { useStore } from '../../store/AppStore';
 import { C, F, addDays, plural, rub, shortDate } from '../../theme';
 
 export default function ProductScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { products, wardrobe, addToCart, cart, favorites, toggleFavorite, premium } = useStore();
+  const { products, wardrobe, addToCart, cart, favorites, toggleFavorite, premium, sizeFor } = useStore();
+  const [chartOpen, setChartOpen] = useState(false);
   const p = products.find((x) => x.id === id);
   const [size, setSize] = useState<string | null>(null);
 
@@ -25,7 +27,9 @@ export default function ProductScreen() {
   const extra = Math.max(0, newOutfitsWith(p, wardrobe));
   const inCart = cart.some((l) => l.productId === p.id);
   const fav = favorites.includes(p.id);
-  const chosen = size ?? p.sizes[Math.floor(p.sizes.length / 2)];
+  const advice = sizeFor(p);
+  const chosen = size ?? advice.size ?? p.sizes[Math.floor(p.sizes.length / 2)];
+  const rows = p.sizeChart ? chartRows(p.kind, p.sizeChart) : [];
 
   return (
     <Screen
@@ -81,9 +85,36 @@ export default function ProductScreen() {
 
       <View style={{ gap: 8 }}>
         <Txt v="label">Размер</Txt>
+        {p.kind !== 'acc' && (
+          <Pressable accessibilityRole="link" onPress={() => router.push('/body')} style={{ backgroundColor: advice.ok ? C.accentSoft : C.adBg, borderRadius: R.input, padding: 12, gap: 2 }}>
+            <Txt v="bodyB" color={advice.ok ? C.accentInk : C.adInk}>{advice.size ? `Твой размер — ${advice.size}` : advice.ok ? 'Подберём размер' : 'Твоего размера нет'}</Txt>
+            <Txt v="small" color={advice.ok ? C.accentInk : C.adInk}>{advice.note}</Txt>
+          </Pressable>
+        )}
         <Row gap={8} wrap>
-          {p.sizes.map((s) => <Chip key={s} label={s} selected={chosen === s} onPress={() => setSize(s)} />)}
+          {p.sizes.map((s) => <Chip key={s} label={s === advice.size ? `${s} · твой` : s} selected={chosen === s} onPress={() => setSize(s)} />)}
         </Row>
+        {rows.length > 0 && (
+          <Pressable accessibilityRole="button" accessibilityState={{ expanded: chartOpen }} onPress={() => setChartOpen(!chartOpen)} style={{ minHeight: 36, justifyContent: 'center' }}>
+            <Txt v="small" color={C.accent} style={{ fontFamily: F.b }}>{chartOpen ? 'Скрыть размерную сетку' : 'Размерная сетка продавца'}</Txt>
+          </Pressable>
+        )}
+        {chartOpen && (
+          <View style={{ borderWidth: 1, borderColor: C.line, borderRadius: R.input, overflow: 'hidden' }}>
+            <Row style={{ backgroundColor: C.surface, paddingVertical: 8, paddingHorizontal: 12 }}>
+              {(p.kind === 'shoes' ? ['Размер', 'Стопа, см'] : ['Размер', 'Грудь', 'Талия', 'Бёдра']).map((h) => (
+                <Txt key={h} v="small" color={C.ink} style={{ flex: 1, fontFamily: F.b }}>{h}</Txt>
+              ))}
+            </Row>
+            {rows.map((r) => (
+              <Row key={r.size} style={{ paddingVertical: 8, paddingHorizontal: 12, borderTopWidth: 1, borderTopColor: C.line, backgroundColor: r.size === advice.size ? C.accentSoft : C.card }}>
+                <Txt v="small" color={C.ink} style={{ flex: 1, fontFamily: F.b }}>{r.size}</Txt>
+                {r.cells.map((c, i) => <Txt key={i} v="small" color={C.ink} style={{ flex: 1 }}>{c}</Txt>)}
+              </Row>
+            ))}
+            <Txt v="small" style={{ padding: 12, paddingTop: 6, fontSize: 11 }}>Обхваты тела в сантиметрах — указывает продавец, это обязательно для каждого товара.</Txt>
+          </View>
+        )}
         <Txt v="small" color={p.stock <= 3 ? C.danger : C.muted}>{p.stock === 0 ? 'Нет в наличии' : p.stock <= 3 ? `Осталось ${p.stock} шт.` : 'В наличии'}</Txt>
       </View>
 

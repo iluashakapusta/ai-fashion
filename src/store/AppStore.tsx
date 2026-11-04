@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { DEMO_WARDROBE, PRODUCTS, WEATHER } from '../data/demo';
+import { DEMO_BODY, DEMO_WARDROBE, PRODUCTS, WEATHER } from '../data/demo';
+import { bodyFilled, recommendSize, type BodyParams } from '../engine/sizing';
 import type { Post } from '../data/feed';
 import type { CartLine, ChatMessage, Look, Order, Product, WardrobeItem } from '../data/types';
 import { alternatives, parseRequest, planLooks } from '../engine/stylist';
@@ -31,6 +32,10 @@ let seq = 0;
 const uid = (p: string) => `${p}${Date.now().toString(36)}${(seq++).toString(36)}`;
 
 interface Store {
+  body: BodyParams;
+  setBody: (b: BodyParams) => void;
+  /** Recommended size for a product given the buyer's measurements. */
+  sizeFor: (p: Product) => ReturnType<typeof recommendSize>;
   wardrobe: WardrobeItem[];
   products: Product[];
   looks: Record<string, Look>;
@@ -78,6 +83,7 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
   const [premium, setPremium] = useState(false);
   const [requestsToday, setRequests] = useState(0);
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  const [body, setBody] = useState<BodyParams>(DEMO_BODY);
   const [todayVariant, setTodayVariant] = useState(0);
   const [likes, setLikes] = useState<string[]>([]);
   const [subscriptions, setSubscriptions] = useState<string[]>(['c1', 's1']);
@@ -104,7 +110,10 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     }
     setRequests((n) => n + 1);
     const brief = parseRequest(text, WEATHER.warmth);
-    const plan = planLooks({ wardrobe, products }, brief, uid('l'), requestsToday);
+    const plan = planLooks({ wardrobe, products, body: bodyFilled(body) ? body : undefined }, brief, uid('l'), requestsToday);
+    if (plan.buyIds.length) plan.reply += bodyFilled(body)
+      ? ' Размеры подобрал по твоим параметрам — в образах только вещи, где есть твой размер.'
+      : ' Укажи свои параметры в профиле — подберу и размер.';
     setLooks((ls) => {
       const next = { ...ls };
       plan.looks.forEach((l) => (next[l.id] = l));
@@ -113,13 +122,13 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     setMessages((m) => [...m, user, {
       id: uid('m'), role: 'ai', text: plan.reply, chips: plan.chips, lookIds: plan.looks.map((l) => l.id),
     }]);
-  }, [premium, requestsToday, wardrobe, products]);
+  }, [premium, requestsToday, wardrobe, products, body]);
 
   const replaceInLook = useCallback((lookId: string, index: number) => {
     setLooks((ls) => {
       const look = ls[lookId];
       if (!look) return ls;
-      const alts = alternatives({ wardrobe, products }, look, index);
+      const alts = alternatives({ wardrobe, products, body: bodyFilled(body) ? body : undefined }, look, index);
       if (!alts.length) return ls;
       const cur = alts.findIndex((a) => a.g.id === look.items[index].id);
       const nextAlt = alts[(cur + 1) % alts.length];
@@ -127,13 +136,14 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
       items[index] = { ...items[index], id: nextAlt.g.id, source: nextAlt.source };
       return { ...ls, [lookId]: { ...look, items } };
     });
-  }, [wardrobe, products]);
+  }, [wardrobe, products, body]);
 
   const addToCart = useCallback((productId: string, size?: string) => {
     const p = products.find((x) => x.id === productId);
     if (!p) return;
-    setCart((c) => (c.some((l) => l.productId === productId) ? c : [...c, { productId, size: size || p.sizes[Math.floor(p.sizes.length / 2)] }]));
-  }, [products]);
+    const fit = size || recommendSize(p, body).size || p.sizes[Math.floor(p.sizes.length / 2)];
+    setCart((c) => (c.some((l) => l.productId === productId) ? c : [...c, { productId, size: fit }]));
+  }, [products, body]);
 
   const addLooksToCart = useCallback((lookIds: string[]) => {
     const ids = new Set<string>();
@@ -167,6 +177,7 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<Store>(() => ({
     wardrobe, products, looks, messages, cart, orders, favorites, premium, requestsToday, settings, todayVariant,
+    body, setBody, sizeFor: (p) => recommendSize(p, body),
     likes, subscriptions, reported, myPosts,
     toggleLike: (id) => setLikes((xs) => (xs.includes(id) ? xs.filter((x) => x !== id) : [...xs, id])),
     toggleSubscribe: (id) => setSubscriptions((xs) => (xs.includes(id) ? xs.filter((x) => x !== id) : [...xs, id])),
@@ -187,10 +198,10 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
     reset: () => {
       setWardrobe(DEMO_WARDROBE); setProducts(PRODUCTS); setLooks({}); setMessages([GREETING]); setCart([]);
       setOrders([]); setFavorites([]); setPremium(false); setRequests(0); setSettings(DEFAULT_SETTINGS); setTodayVariant(0);
-      setLikes([]); setSubscriptions(['c1', 's1']); setReported([]); setMyPosts([]);
+      setLikes([]); setSubscriptions(['c1', 's1']); setReported([]); setMyPosts([]); setBody(DEMO_BODY);
     },
   }), [wardrobe, products, looks, messages, cart, orders, favorites, premium, requestsToday, settings, todayVariant,
-    likes, subscriptions, reported, myPosts,
+    likes, subscriptions, reported, myPosts, body,
     ask, replaceInLook, addToCart, addLooksToCart, checkout]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

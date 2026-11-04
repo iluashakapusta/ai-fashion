@@ -1,3 +1,5 @@
+import type { SizeChart } from '../engine/sizing';
+
 export type Kind = 'top' | 'bottom' | 'dress' | 'outer' | 'shoes' | 'acc';
 export type Occasion = 'office' | 'casual' | 'date' | 'evening' | 'party' | 'beach' | 'sport' | 'interview';
 export type Warmth = 'hot' | 'warm' | 'cool' | 'cold';
@@ -36,6 +38,8 @@ export interface Product extends Garment {
   /** Brand name as sold; plain shop basics have none. */
   brand?: string;
   condition?: Condition;
+  /** Seller's size chart: body measurements each size is made for. Required from sellers. */
+  sizeChart?: SizeChart;
 }
 
 export type Condition = 'new' | 'likeNew' | 'used';
